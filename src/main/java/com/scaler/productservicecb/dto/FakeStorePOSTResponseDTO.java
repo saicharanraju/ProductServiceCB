@@ -1,5 +1,7 @@
 package com.scaler.productservicecb.dto;
 
+import com.scaler.productservicecb.models.Category;
+import com.scaler.productservicecb.models.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -61,6 +63,19 @@ public class FakeStorePOSTResponseDTO {//
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Product toProduct(){
+        Product product = new Product();
+        product.setId(this.id);
+        product.setName(this.title);
+        product.setPrice(this.price * 1.0);
+        product.setDescription(this.description);
+        product.setImageUrl(this.image);
+        Category category = new Category();
+        category.setName(this.category);
+        product.setCategory(category);
+        return product;
     }
 }
 

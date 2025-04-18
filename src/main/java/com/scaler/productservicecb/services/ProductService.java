@@ -1,12 +1,15 @@
 package com.scaler.productservicecb.services;
 
 import com.scaler.productservicecb.dto.FakeStoreRequestDTO;
+import com.scaler.productservicecb.exceptions.DBNotFoundException;
+import com.scaler.productservicecb.exceptions.DBTimeoutException;
+import com.scaler.productservicecb.exceptions.ProductNotFoundException;
 import com.scaler.productservicecb.models.Product;
 
 import java.util.List;
 
 public interface ProductService {
-    Product getSingleProduct(String productId);
+    Product getSingleProduct(String productId) throws ProductNotFoundException;
 
     List<Product> getAllProducts();
 

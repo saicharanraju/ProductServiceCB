@@ -3,6 +3,9 @@ package com.scaler.productservicecb.services;
 import com.scaler.productservicecb.dto.FakeStorePOSTResponseDTO;
 import com.scaler.productservicecb.dto.FakeStoreRequestDTO;
 import com.scaler.productservicecb.dto.FakeStoreResponseDTO;
+import com.scaler.productservicecb.exceptions.DBNotFoundException;
+import com.scaler.productservicecb.exceptions.DBTimeoutException;
+import com.scaler.productservicecb.exceptions.ProductNotFoundException;
 import com.scaler.productservicecb.models.Category;
 import com.scaler.productservicecb.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +26,26 @@ public class FakeStoreProductService implements ProductService{
     // we use RestTemplate to call 3rd party APIs.
 
     @Override
-    public Product getSingleProduct(String productId) {
-        FakeStorePOSTResponseDTO response = restTemplate.getForObject(
+    public Product getSingleProduct(String productId) throws ProductNotFoundException{
+        FakeStoreResponseDTO response = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + productId,
-                FakeStorePOSTResponseDTO.class
+                FakeStoreResponseDTO.class
         );
+        if(response == null){
+            throw new ProductNotFoundException("product with id " + productId + " not found");
+        }
+//        ConnectToDB();
+//        executeSQLQuery();
         //converting the third-party response to my models and then work on them.
-        Product product = new Product();
-        product.setId(response.getId());
-        product.setName(response.getTitle());
-        product.setPrice(response.getPrice() * 1.0);
-        product.setDescription(response.getDescription());
-        product.setImageUrl(response.getImage());
-        // In FakeStoreResponse we are reading Category as String, in Product it is an Object. So, we will first create Category
-        // object and store the string in it. Before passing and pass Category obj. to product.
-        Category category = new Category();
-        category.setName(response.getCategory());
-        product.setCategory(category);
+        Product product = response.toProduct();
         return product;
+    }
+
+    private void ConnectToDB() throws DBNotFoundException {
+        throw new DBNotFoundException("db not found ");
+    }
+    private void executeSQLQuery() throws DBTimeoutException{
+        throw new DBTimeoutException("db timeout trying to execute query ");
     }
 
     @Override
@@ -51,16 +56,7 @@ public class FakeStoreProductService implements ProductService{
         );
         List<Product> productsList = new ArrayList<>();
         for(FakeStoreResponseDTO response : responseArray){
-            Product product = new Product();
-            product.setId(response.getId());
-            product.setName(response.getTitle());
-            product.setPrice(response.getPrice() * 1.0);
-            product.setDescription(response.getDescription());
-            product.setImageUrl(response.getImage());
-            Category category = new Category();
-            category.setName(response.getCategory());
-            product.setCategory(category);
-
+            Product product = response.toProduct();
             productsList.add(product);
         }
         return productsList;
@@ -73,40 +69,19 @@ public class FakeStoreProductService implements ProductService{
 
     @Override
     public Product createProduct(Product product) {
-
         return null;
     }
 
     @Override
     public Product createProduct(FakeStoreRequestDTO fakeStoreRequestDTO) { //fakeStoreRequestDTO is our input from postman.
-        FakeStoreResponseDTO savedProductResponse = restTemplate.postForObject(
+        FakeStorePOSTResponseDTO savedProductResponse = restTemplate.postForObject(
                 "https://fakestoreapi.com/products",
                  fakeStoreRequestDTO,
-                FakeStoreResponseDTO.class);
-
-        Product product = new Product();
-        product.setId(savedProductResponse.getId());
-        product.setName(savedProductResponse.getTitle());
-        product.setPrice(savedProductResponse.getPrice() * 1.0);
-        product.setDescription(savedProductResponse.getDescription());
-        product.setImageUrl(savedProductResponse.getImage());
-        Category category = new Category();
-        category.setName(savedProductResponse.getCategory());
-        product.setCategory(category);
+                FakeStorePOSTResponseDTO.class);
+        Product product = savedProductResponse.toProduct();
         return product;
     }
-//
-//    private Product convertResponseToProduct(FakeStoreResponseDTO response){
-//
-//        Product product = new Product();
-//        product.setId(response.getId());
-//        product.setName(response.getTitle());
-//        product.setPrice(response.getPrice() * 1.0);
-//        product.setDescription(response.getDescription());
-//        product.setImageUrl(response.getImage());
-//        Category category = new Category();
-//        category.setName(response.getCategory());
-//        product.setCategory(category);
-//        return product;
-//    }
+    //Now, the ProductService have actual methods. It doesnot contain 'convert this to that'.
+    //And, it's the object responsibility to convert itself.(FakeStoreResponseDTO obj. FakeStorePOSTResponseDTO obj.)
+
 }
