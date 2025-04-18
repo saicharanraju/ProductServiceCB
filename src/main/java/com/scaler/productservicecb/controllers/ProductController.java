@@ -34,7 +34,7 @@ public class ProductController {
         catch (ProductNotFoundException pnfe){
             ProductResponseDTO productResponseDTO = new ProductResponseDTO();
             productResponseDTO.setProduct(null);
-            productResponseDTO.setResponseMessage(pnfe.getMessage() + "exception type 1");
+            productResponseDTO.setResponseMessage(pnfe.getMessage() + " exception type 1");
             ResponseEntity<ProductResponseDTO> responseEntity = new ResponseEntity<>(productResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
             return responseEntity;
         }
