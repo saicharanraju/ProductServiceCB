@@ -1,5 +1,6 @@
 package com.scaler.productservicecb.services;
 
+import com.scaler.productservicecb.dto.FakeStoreRequestDTO;
 import com.scaler.productservicecb.models.Product;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,11 @@ public class RealProductService implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+        return null;
+    }
+
+    @Override
+    public Product createProduct(FakeStoreRequestDTO fakeStoreRequestDTO) {
         return null;
     }
 }

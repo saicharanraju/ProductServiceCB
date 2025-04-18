@@ -1,5 +1,6 @@
 package com.scaler.productservicecb.controllers;
 
+import com.scaler.productservicecb.dto.FakeStoreRequestDTO;
 import com.scaler.productservicecb.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,8 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public Product createProduct(@RequestBody Product productReceivedFromRequest){
-        Product savedProduct = productService.createProduct(productReceivedFromRequest);
+    public Product createProduct(@RequestBody FakeStoreRequestDTO fakeStoreRequestDTO){ // we'll get request in format of FakeStoreRequestDTO
+        Product savedProduct = productService.createProduct(fakeStoreRequestDTO);
         return savedProduct;
     }
 

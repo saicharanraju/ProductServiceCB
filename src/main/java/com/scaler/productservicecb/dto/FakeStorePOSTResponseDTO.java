@@ -1,21 +1,18 @@
 package com.scaler.productservicecb.dto;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
-// purpose to store data from outside world.
-// we place this inside DTO(Data Transfer Objects).
 //@Getter
 //@Setter
-public class FakeStoreResponse {
+public class FakeStorePOSTResponseDTO {//
+
     private String id;
     private String title;
     private Integer price;
     private String description;
     private String image;
     private String category;
-
     // Getters
     public String getId() {
         return id;
@@ -65,5 +62,5 @@ public class FakeStoreResponse {
     public void setCategory(String category) {
         this.category = category;
     }
-
 }
+
