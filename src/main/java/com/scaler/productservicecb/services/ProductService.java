@@ -9,7 +9,7 @@ import com.scaler.productservicecb.models.Product;
 import java.util.List;
 
 public interface ProductService {
-    Product getSingleProduct(String productId) throws ProductNotFoundException;
+    Product getSingleProduct(String productId) throws ProductNotFoundException, DBTimeoutException, DBNotFoundException;
 
     List<Product> getAllProducts();
 

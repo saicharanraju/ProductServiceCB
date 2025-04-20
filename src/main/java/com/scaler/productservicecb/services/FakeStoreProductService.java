@@ -1,5 +1,6 @@
 package com.scaler.productservicecb.services;
 
+import com.scaler.productservicecb.dto.ErrorResponseDTO;
 import com.scaler.productservicecb.dto.FakeStorePOSTResponseDTO;
 import com.scaler.productservicecb.dto.FakeStoreRequestDTO;
 import com.scaler.productservicecb.dto.FakeStoreResponseDTO;
@@ -9,15 +10,19 @@ import com.scaler.productservicecb.exceptions.ProductNotFoundException;
 import com.scaler.productservicecb.models.Category;
 import com.scaler.productservicecb.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Primary
+@Qualifier("FSProductService")
 public class FakeStoreProductService implements ProductService{
 
     // It has to hit the APIs of Fakestoreserver; basically, this class is going to be a client of another server.
@@ -26,7 +31,7 @@ public class FakeStoreProductService implements ProductService{
     // we use RestTemplate to call 3rd party APIs.
 
     @Override
-    public Product getSingleProduct(String productId) throws ProductNotFoundException{
+    public Product getSingleProduct(String productId) throws ProductNotFoundException, DBNotFoundException, DBTimeoutException {
         FakeStoreResponseDTO response = restTemplate.getForObject(
                 "https://fakestoreapi.com/products/" + productId,
                 FakeStoreResponseDTO.class
@@ -34,8 +39,8 @@ public class FakeStoreProductService implements ProductService{
         if(response == null){
             throw new ProductNotFoundException("product with id " + productId + " not found");
         }
-//        ConnectToDB();
-//        executeSQLQuery();
+        ConnectToDB();      // This will stop the execution when given correct input and return exception.
+        executeSQLQuery();  // This will stop the execution when given correct input and return exception.
         //converting the third-party response to my models and then work on them.
         Product product = response.toProduct();
         return product;
@@ -51,7 +56,7 @@ public class FakeStoreProductService implements ProductService{
     @Override
     public List<Product> getAllProducts() {
         FakeStoreResponseDTO[] responseArray = restTemplate.getForObject(
-                "https://fakestoreapi.com/products/",
+                "https://fakestoreapi.com/products",
                 FakeStoreResponseDTO[].class
         );
         List<Product> productsList = new ArrayList<>();
@@ -61,6 +66,7 @@ public class FakeStoreProductService implements ProductService{
         }
         return productsList;
     }
+
 
     @Override
     public List<Product> searchProducts(String searchText) {
