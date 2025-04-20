@@ -1,18 +1,28 @@
 package com.scaler.productservicecb.models;
-
+import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
-    private String id;
+@Entity
+public class Category extends BaseModel{
+
     private String name;
 
+    //it is inverse of the same relation between Product and Category
+    //this relation is already handled by category column in Product table
+    @OneToMany(mappedBy = "category")
+    private List<Product> procuts;
 //    // No-argument constructor
 //    public Category() {
 //    }

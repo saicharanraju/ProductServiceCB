@@ -1,22 +1,33 @@
 package com.scaler.productservicecb.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-public class Product {
-    private String id;
+@Entity
+public class Product extends BaseModel{
+    //All these are primitive datatypes
     private String name;
     private String description;
     private double price;
     private String imageUrl;
+    //This is non primitive
+    //I have to define relation between Product & Category.
+    //=>Cardinality
+    @ManyToOne
     private Category category;
+
+
 
 //    // No-argument constructor
 //    public Product() {

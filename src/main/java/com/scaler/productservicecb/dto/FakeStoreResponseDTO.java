@@ -70,7 +70,7 @@ public class FakeStoreResponseDTO {
 
     public Product toProduct(){
         Product product = new Product();
-        product.setId(this.id);
+        product.setId(Long.valueOf(this.id));
         product.setName(this.title);
         product.setPrice(this.price * 1.0);
         product.setDescription(this.description);
