@@ -13,7 +13,7 @@ import java.util.List;
 public class HelloController {
 
     @Autowired
-    @Qualifier("RProductService")
+    @Qualifier("RealDBProductService")
     ProductService productService;
     @GetMapping("/hello")
     public String sayHello() throws ProductNotFoundException {

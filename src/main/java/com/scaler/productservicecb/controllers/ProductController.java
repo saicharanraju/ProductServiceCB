@@ -22,7 +22,7 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    @Qualifier("FSProductService")
+    @Qualifier("RealDBProductService") //Spring will create bean RealDBProductService, as we mentioned @Qualifier on RealProductService class and pass it here.
     ProductService productService; //Controller needs to have ProductService obj. ready which we can use and call the Service for actual logic.
                                    //We are using Interface(ProductService not FakeStoreProductResponse) to guarantee that we have all methods implemented.
     @GetMapping("/products/{id}")
@@ -47,15 +47,23 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    // http:/localhost:8080/products?text="Hello"
-    public List<Product> searchProducts(@RequestParam("text") String queryText){
-        List<Product> products = productService.searchProducts(queryText);
+    //url: GET   http://localhost:8080/search?catName=laptop
+    public List<Product>  getProductsByCategoryName(@RequestParam("catName") String categoryName){
+        List<Product> products = productService.getProductsByCategoryName(categoryName);
         return products;
+
     }
 
+//    @GetMapping("/search")
+//    // http:/localhost:8080/products?text="Hello"
+//    public List<Product> searchProducts(@RequestParam("text") String queryText){
+//        List<Product> products = productService.searchProducts(queryText);
+//        return products;
+//    }
+
     @PostMapping("/products")
-    public Product createProduct(@RequestBody FakeStoreRequestDTO fakeStoreRequestDTO){ // we'll get request in format of FakeStoreRequestDTO
-        Product savedProduct = productService.createProduct(fakeStoreRequestDTO);
+    public Product createProduct(@RequestBody Product product){
+        Product savedProduct = productService.createProduct(product);
         return savedProduct;
     }
     //To check where the exception goes if it happens in service. service or controller ?

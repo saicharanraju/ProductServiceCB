@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Qualifier("FSProductService")
+@Qualifier("FakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
 
     // It has to hit the APIs of Fakestoreserver; basically, this class is going to be a client of another server.
@@ -65,6 +65,11 @@ public class FakeStoreProductService implements ProductService{
             productsList.add(product);
         }
         return productsList;
+    }
+
+    @Override
+    public List<Product> getProductsByCategoryName(String categoryName) {
+        return List.of();
     }
 
 
