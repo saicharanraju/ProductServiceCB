@@ -124,31 +124,5 @@ class ProductServiceCbApplicationTests {
         //optimally we can get all the products in a single call as well
         //select * from product P where P.category_Id IN [category list]  => optimal way
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

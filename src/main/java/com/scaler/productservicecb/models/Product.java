@@ -22,7 +22,8 @@ public class Product extends BaseModel{
     private String description;
     private double price;
     private String imageUrl;
-    //This is non primitive
+    private Double discount;
+    //This is non-primitive
     //I have to define relation between Product & Category.
     //=>Cardinality
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}) //when you create Product it should cascade the changes and create category. when you delete it should stop

@@ -19,6 +19,7 @@ import java.util.Date;
 public class Category extends BaseModel{
 
     private String name;
+    private String parentCategory;
 
     //it is inverse of the same relation between Product and Category
     //this relation is already handled by category column in Product table
