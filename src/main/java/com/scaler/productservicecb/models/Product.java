@@ -1,5 +1,6 @@
 package com.scaler.productservicecb.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
@@ -24,7 +25,7 @@ public class Product extends BaseModel{
     //This is non primitive
     //I have to define relation between Product & Category.
     //=>Cardinality
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}) //when you create Product it should cascade the changes and create category. when you delete it should stop
     private Category category;
 
 

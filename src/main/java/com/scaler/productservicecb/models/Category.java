@@ -1,6 +1,7 @@
 package com.scaler.productservicecb.models;
 import java.util.List;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,10 @@ public class Category extends BaseModel{
 
     //it is inverse of the same relation between Product and Category
     //this relation is already handled by category column in Product table
-    @OneToMany(mappedBy = "category")
-    private List<Product> procuts;
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    private List<Product> products;
+
+
 //    // No-argument constructor
 //    public Category() {
 //    }
