@@ -39,8 +39,8 @@ public class FakeStoreProductService implements ProductService{
         if(response == null){
             throw new ProductNotFoundException("product with id " + productId + " not found");
         }
-        ConnectToDB();      // This will stop the execution when given correct input and return exception.
-        executeSQLQuery();  // This will stop the execution when given correct input and return exception.
+        //ConnectToDB();      // This will stop the execution when given correct input and return exception.
+        //executeSQLQuery();  // This will stop the execution when given correct input and return exception.
         //converting the third-party response to my models and then work on them.
         Product product = response.toProduct();
         return product;
@@ -68,19 +68,45 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public List<Product> getProductsByCategoryName(String categoryName) {
-        return List.of();
+    public List<Product> getProductsByCategoryName(String categoryName) throws ProductNotFoundException{
+        FakeStoreResponseDTO[] responseDTO = restTemplate.getForObject(
+                "https://fakestoreapi.com/products/category/" + categoryName,
+                FakeStoreResponseDTO[].class
+        );
+        if(responseDTO == null){
+            throw new ProductNotFoundException("product with id " + categoryName + " not found");
+        }
+        List<Product> productsList = new ArrayList<>();
+        for(FakeStoreResponseDTO response : responseDTO){
+            Product product = response.toProduct();
+            productsList.add(product);
+        }
+        return productsList;
     }
 
 
     @Override
     public List<Product> searchProducts(String searchText) {
-        return List.of();
+        List<Product> productsList = getAllProducts();
+        List<Product> matchedProducts = new ArrayList<>();
+        for(Product product : productsList){
+            if(product.getName().toLowerCase().contains(searchText.toLowerCase()) ||
+            product.getDescription().toLowerCase().contains(searchText.toLowerCase())){
+                matchedProducts.add(product);
+            }
+        }
+        return matchedProducts;
     }
 
     @Override
     public Product createProduct(Product product) {
-        return null;
+        FakeStoreRequestDTO dto = new FakeStoreRequestDTO();
+        dto.setTitle(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice()* 1.0);
+        dto.setImage(product.getImageUrl());
+        dto.setCategory(product.getCategory().getName());
+        return createProduct(dto);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.scaler.productservicecb.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -27,6 +28,7 @@ public class Product extends BaseModel{
     //I have to define relation between Product & Category.
     //=>Cardinality
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}) //when you create Product it should cascade the changes and create category. when you delete it should stop
+    @JsonBackReference  // Child side //perplexity
     private Category category;
 
 

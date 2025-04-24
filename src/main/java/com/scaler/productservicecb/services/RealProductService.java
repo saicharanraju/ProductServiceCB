@@ -1,6 +1,7 @@
 package com.scaler.productservicecb.services;
 
 import com.scaler.productservicecb.dto.FakeStoreRequestDTO;
+import com.scaler.productservicecb.exceptions.ProductNotFoundException;
 import com.scaler.productservicecb.models.Category;
 import com.scaler.productservicecb.models.Product;
 import com.scaler.productservicecb.repository.CategoryRepository;
@@ -27,14 +28,17 @@ public class RealProductService implements ProductService {
     }
 
     @Override
-    public Product getSingleProduct(String productId) {
-        return null;
+    public Product getSingleProduct(String productId) throws ProductNotFoundException {
+        Optional<Product> productOptional = productRepository.findById(Long.parseLong(productId));
+        if (productOptional.isEmpty()) {
+            throw new ProductNotFoundException(productId);
+        }
+        return productOptional.get();
     }
 
     @Override
     public List<Product> getAllProducts() {
-        //return productRepository.getAllProducts();
-        return null;
+         return productRepository.findAll();
     }
 
     @Override
@@ -66,14 +70,14 @@ public class RealProductService implements ProductService {
         //4. sometimes we do not get category object. so, use optional.
         /*
         {
-           name:  dell 15"
-           price: 10000
-           desc:  Good
-           Category{
-             id = null
-             name = laptop
+           "name":  "dell 15",
+           "price": "10000",
+           "desc":  "Good",
+           "category":{
+             "id" : "null",
+             "name" : "laptop"
            }
-        }
+         }
          */
         //product.getCategory() gives me the object, in the Category we use getName()
         Optional<Category> optionalCategory = categoryRepository.getCategoryByName(product.getCategory().getName());

@@ -22,9 +22,9 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    @Qualifier("RealDBProductService") //Spring will create bean RealDBProductService, as we mentioned @Qualifier on RealProductService class and pass it here.
+    @Qualifier("FakeStoreProductService") //Spring will create bean RealDBProductService, as we mentioned @Qualifier on RealProductService class and pass it here.
     ProductService productService; //Controller needs to have ProductService obj. ready which we can use and call the Service for actual logic.
-                                   //We are using Interface(ProductService not FakeStoreProductResponse) to guarantee that we have all methods implemented.
+                                   //We are using Interface(ProductService not FakeStoreProductService) to guarantee that we have all methods implemented.
     @GetMapping("/products/{id}")
     public ResponseEntity<ProductResponseDTO> getSingleProduct(@PathVariable("id") String productId) throws DBTimeoutException, DBNotFoundException, ProductNotFoundException {
             Product product = productService.getSingleProduct(productId);
@@ -46,25 +46,39 @@ public class ProductController {
 
     }
 
-    @GetMapping("/search")
-    //url: GET   http://localhost:8080/search?catName=laptop
-    public List<Product>  getProductsByCategoryName(@RequestParam("catName") String categoryName){
+    @GetMapping(value = "/search", params = "catName")
+    //url: GET   http://localhost:8080/search?catName=electronics
+    public List<Product>  getProductsByCategoryName(@RequestParam("catName") String categoryName) throws ProductNotFoundException{
         List<Product> products = productService.getProductsByCategoryName(categoryName);
         return products;
 
     }
 
-//    @GetMapping("/search")
-//    // http:/localhost:8080/products?text="Hello"
-//    public List<Product> searchProducts(@RequestParam("text") String queryText){
-//        List<Product> products = productService.searchProducts(queryText);
-//        return products;
-//    }
+    @GetMapping(value = "/search", params = "text")
+    // http:/localhost:8080/search?text=jacket
+    public List<Product> searchProducts(@RequestParam("text") String queryText){
+        List<Product> products = productService.searchProducts(queryText);
+        return products;
+    }
 
     @PostMapping("/products")
     public Product createProduct(@RequestBody Product product){
         Product savedProduct = productService.createProduct(product);
         return savedProduct;
+        /*
+        {
+  "id": 101,
+  "name": "Wireless Bluetooth Headphones",
+  "description": "High quality wireless headphones with noise cancellation.",
+  "price": 2999.99,
+  "imageUrl": "https://example.com/images/headphones.jpg",
+  "discount": 10.5,
+  "category": {
+    "Name": "Electronics",
+    "Category": "Audio"
+  }
+}
+         */
     }
     //To check where the exception goes if it happens in service. service or controller ?
     @ExceptionHandler(ProductNotFoundException.class)

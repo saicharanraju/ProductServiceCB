@@ -1,5 +1,7 @@
 package com.scaler.productservicecb.models;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -24,6 +26,7 @@ public class Category extends BaseModel{
     //it is inverse of the same relation between Product and Category
     //this relation is already handled by category column in Product table
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonManagedReference //parent side //perplexity
     private List<Product> products;
 
 

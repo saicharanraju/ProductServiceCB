@@ -13,7 +13,7 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
-    List<Product> getProductsByCategoryName(String categoryName);
+    List<Product> getProductsByCategoryName(String categoryName) throws ProductNotFoundException;
 
     List<Product> searchProducts(String searchText);
 
